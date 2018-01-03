@@ -19,7 +19,8 @@ def generate_kline_huobi(j):
             tot += 1
             continue
         mmnt.append(time.ctime(data['id'])[:-5])
-        closeaver5.append((now/5))
+        if tot > 3:
+            closeaver5.append((now/5))
         tot += 1
         now -= j[tot-4]['close']
     plt.plot(mmnt, closeaver5, color="blue", linewidth=1.0, linestyle="-", label='huobi')
