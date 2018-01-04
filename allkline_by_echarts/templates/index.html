@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <title>ECharts</title>
     <!-- 引入 echarts.js -->
-    <script src="./echarts.js"></script>
+    <script src="{{ url_for('static', filename='jquery-3.2.1.js') }}"></script>
+    <script src="{{ url_for('static', filename='echarts.js') }}"></script>
 </head>
 <body>
     <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
@@ -15,18 +16,23 @@
         // 显示标题，图例和空的坐标轴
         myChart.setOption({
             title: {
-                text: '异步数据加载示例'
+                text: 'BTC/USDT的不同交易所价格对比'
             },
             tooltip: {},
             legend: {
-                data:['均价']
+                data:['火币','okcoin']
             },
             xAxis: {
                 data: []
             },
             yAxis: {},
             series: [{
-                name: '均价',
+                name: '火币',
+                type: 'line',
+                data: []
+            },
+            {
+                name: 'okcoin',
                 type: 'line',
                 data: []
             }]
@@ -41,13 +47,13 @@
                 },
                 series: [{
                     // 根据名字对应到相应的系列
-                    name: '均价',
-                    data: data.aver_hb
+                    name: '火币',
+                    data: data.aver_hb.map(parseFloat)
                 },
                 {
                     // 根据名字对应到相应的系列
-                    name: '均价',
-                    data: data.aver_okcoin
+                    name: 'okcoin',
+                    data: data.aver_okcoin.map(parseFloat)
                 }
                 ]
             });
