@@ -1,29 +1,11 @@
 import requests
 import json
-import matplotlib.pyplot as plt
 import time
 import pymysql
 
 conn = pymysql.connect(host='localhost', user='root', passwd='', db='mysql', charset='utf8')
 cur = conn.cursor()
 cur.execute("USE DIGICCY")
-
-def generate_kline_huobi(j):
-    tot = 0
-    mmnt = []
-    closeaver5 = []
-    now = 0
-    for data in j:
-        now += data['close']
-        if tot <= 3 :
-            tot += 1
-            continue
-        mmnt.append(time.ctime(data['id'])[:-5])
-        if tot > 3:
-            closeaver5.append((now/5))
-        tot += 1
-        now -= j[tot-4]['close']
-    plt.plot(mmnt, closeaver5, color="blue", linewidth=1.0, linestyle="-", label='huobi')
 
 def savedatahb(j):
     for data in j:
@@ -35,22 +17,6 @@ def savedatahb(j):
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         ''', (tt, data['open'], data['close'], data['low'], data['high'], data['amount'], data['vol'], data['count']))
     cur.connection.commit()
-
-def generate_kline_okcoin(j):
-    mmnt = []
-    closeaver5 = []
-    tot = 0
-    now = 0
-    for i in j:
-        now += float(i[4])
-        if tot <= 3 :
-            tot += 1
-            continue
-        mmnt.append(time.ctime(int(i[0] / 1000))[:-5])
-        closeaver5.append((now/5))
-        tot += 1
-        now -= float(j[tot-4][4])
-    plt.plot(mmnt, closeaver5, color="red", linewidth=1.0, linestyle="-", label='okcoin')
 
 def savedataokcoin(j):
     for data in j:
@@ -74,19 +40,11 @@ wb_data_okcoin = requests.get(urlokcoin)
 j1 = json.loads(wb_data_hb.text)
 j = j1['data']
 j = sorted(j, key=lambda x: x['id'])
-generate_kline_huobi(j)
 savedatahb(j)
 
 j = json.loads(wb_data_okcoin.text)
 j = sorted(j, key=lambda x: x[0])
-generate_kline_okcoin(j)
 savedataokcoin(j)
 
 cur.close()
 conn.close()
-
-plt.xlabel('Time')
-plt.title('BTC/USDT')
-plt.legend(loc='upper left')
-plt.setp(plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
-plt.show()
