@@ -39,26 +39,32 @@
         });
 
         // 异步加载数据
-        $.get('/5minutesaverage').done(function (data) {
-            // 填入数据
-            myChart.setOption({
-                xAxis: {
-                    data: data.time
-                },
-                series: [{
-                    // 根据名字对应到相应的系列
-                    name: '火币',
-                    data: data.aver_hb.map(parseFloat)
-                },
-                {
-                    // 根据名字对应到相应的系列
-                    name: 'okcoin',
-                    data: data.aver_okcoin.map(parseFloat)
-                }
-                ]
+        function addData(){
+            $.get('/5minutesaverage').done(function (data) {
+                // 填入数据
+                myChart.setOption({
+                    xAxis: {
+                        data: data.time
+                    },
+                    series: [{
+                        // 根据名字对应到相应的系列
+                        name: '火币',
+                        data: data.aver_hb.map(parseFloat)
+                    },
+                    {
+                        // 根据名字对应到相应的系列
+                        name: 'okcoin',
+                        data: data.aver_okcoin.map(parseFloat)
+                    }
+                    ]
+                });
             });
-        });
+        }
         // 使用刚指定的配置项和数据显示图表。
+
+        myChart.timeTicket = setInterval(function () {
+		addData(); //动态刷新
+	}, 500);
     </script>
 </body>
 </html>

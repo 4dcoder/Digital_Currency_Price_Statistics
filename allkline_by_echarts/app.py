@@ -14,7 +14,7 @@ def index():
 
 @app.route('/5minutesaverage', methods=['GET'])
 def cal_5_minutes():
-    cur.execute("SELECT id, close FROM hb WHERE id > '2018-01-04 15:34:00'")
+    cur.execute("SELECT id, close FROM hb")
     res = cur.fetchall()
     tot = 0
     mmnt = []
@@ -30,7 +30,7 @@ def cal_5_minutes():
             closeaver5_hb.append((now / 5))
         tot += 1
         now -= res[tot - 4][1]
-    cur.execute("SELECT id, close FROM okcoin WHERE id > '2018-01-04 15:34:00'")
+    cur.execute("SELECT id, close FROM okcoin")
     res = cur.fetchall()
     closeaver5_okcoin = []
     now = 0
