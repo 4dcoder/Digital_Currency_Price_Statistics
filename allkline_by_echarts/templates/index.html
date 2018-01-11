@@ -40,7 +40,7 @@
 
         // 异步加载数据
         function addData(){
-            $.get('/5minutesaverage').done(function (data) {
+            $.post('/5minutesaverage').done(function (data) {
                 // 填入数据
                 myChart.setOption({
                     xAxis: {
